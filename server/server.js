@@ -17,6 +17,18 @@ io.on("connect", (socket) => { // connect or connection
     console.log("Client disconnected");
   });
 
+  socket.emit("newMessage", {
+    from: "Admin",
+    text: "Welcome to the Chat Room",
+    createdAt: new Date().getTime()
+  });
+
+  socket.broadcast.emit("newMessage", {
+    from: "Admin",
+    text: "New user joined",
+    createdAt: new Date().getTime()
+  });
+
 // socket.emit emits to a single connection whereas io.emit emits an event to every single connection
   socket.on("createMessage", (message) => {
     io.emit("newMessage", {
@@ -24,6 +36,11 @@ io.on("connect", (socket) => { // connect or connection
       text: message.text,
       createdAt: new Date().getTime()
     });
+    // socket.broadcast.emit("newMessage", { // the message gets broadcasted to every socket except for this one.
+    //   from: message.from,
+    //   text: message.text,
+    //   createdAt: new Date().getTime()
+    // });
   });
 
  // emits or creates an event. since it is an event handler so wo don't specify any callback.
