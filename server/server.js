@@ -17,15 +17,16 @@ io.on("connect", (socket) => { // connect or connection
     console.log("Client disconnected");
   });
 
+// socket.emit emits to a single connection whereas io.emit emits an event to every single connection
   socket.on("createMessage", (message) => {
-    console.log("create message", message);
+    io.emit("newMessage", {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
-  socket.emit("newMessage", {
-    from: 'Me@me.com',
-    text: "Hey! Okay let's meet then",
-    createdAt: "Just now"
-  }); // emits or creates an event. since it is an event handler so wo don't specify any callback.
+ // emits or creates an event. since it is an event handler so wo don't specify any callback.
 
 });
 

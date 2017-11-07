@@ -4,12 +4,6 @@
 var socket = io(); // we are making a request to the server. this is important for all communications from c to s
 socket.on("connect", function() { // this is client side javascript code that runs on the browser.
   console.log('Connected to the server');
-  socket.emit("createMessage", {
-    from: "Aman",
-    text: "lets catch up on a coffee",
-    createdAt: "Just now"
-  });
-
 });
 
 socket.on("disconnect", function() {
