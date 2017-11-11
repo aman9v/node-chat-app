@@ -23,8 +23,11 @@ io.on("connect", (socket) => { // connect or connection
   socket.broadcast.emit("newMessage", generateMessage('Admin', "New user joined"));
 
 // socket.emit emits to a single connection whereas io.emit emits an event to every single connection
-  socket.on("createMessage", (message) => {
+//
+  socket.on("createMessage", (message, callback) => {
+    console.log(message);
     io.emit("newMessage", generateMessage(message.from, message.text));
+    callback("Acknowledgement from the server saying "); // we could pass some arguments to the callback so that they are available inside of the callback sent on the client side.
     // socket.broadcast.emit("newMessage", { // the message gets broadcasted to every socket except for this one.
     //   from: message.from,
     //   text: message.text,
@@ -46,3 +49,9 @@ server.listen(port, () => {
 // Express on app.listen automatically calls the createServer method with the app
 // web sockets are persistent in the sense that both client and the server keep the connection open
 // io.on is a special event and is used for server wide events like when a connection is established with the server.
+
+// Also, we have an option of sending some data back to the client. This can be facilitated by adding arguments to the sent callback which will
+// be sent or populated by the server and can be used inside of the callback on the client side.
+// To achieve acknowledgements, client sends a callback to the server saying send me an acknowledgement with some data (if any).
+// The server in turn sends the ackknowledgement by invoking that callback this completes initiates the acknowledgement and
+// could also be passed some data.
