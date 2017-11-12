@@ -27,7 +27,7 @@ io.on("connect", (socket) => { // connect or connection
   socket.on("createMessage", (message, callback) => {
     console.log(message);
     io.emit("newMessage", generateMessage(message.from, message.text));
-    callback("Acknowledgement from the server saying "); // we could pass some arguments to the callback so that they are available inside of the callback sent on the client side.
+    callback(); // we could pass some arguments to the callback so that they are available inside of the callback sent on the client side.
     // socket.broadcast.emit("newMessage", { // the message gets broadcasted to every socket except for this one.
     //   from: message.from,
     //   text: message.text,
