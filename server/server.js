@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 var app = express();
 var server = http.createServer(app);
 var io = socketIO(server); // returns a socketIO server and can listten/emit events
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 io.on("connect", (socket) => { // connect or connection
   console.log("new user connected");
   socket.on("disconnect", () => {
@@ -37,7 +37,12 @@ io.on("connect", (socket) => { // connect or connection
 
  // emits or creates an event. since it is an event handler so wo don't specify any callback.
 
+ socket.on("createLocationMessage", (coordinates) => {
+   io.emit("newLocationMessage", generateLocationMessage("Admin", coordinates.latitude, coordinates.longitude));
+ });
 });
+
+
 
 
 app.use(express.static(publicPath));

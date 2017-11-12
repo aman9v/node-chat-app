@@ -20,6 +20,16 @@ socket.on('newMessage', function(message) { // this event will fire off every ti
 }); // this event has been emitted by the server in the server.js file
 // so, we are able to send not only an event but also some data that wasn't possible with a simple http API
 
+socket.on('newLocationMessage', function(message) {
+  var li = $('<li></li>');
+  var a = $('<a target="_blank">My current location</a>');
+
+  li.text(`${message.from}:`);
+  a.attr("href", message.url); // get and set attribute values from jQuery selected elements
+  li.append(a);
+  $('#messages').append(li);
+});
+
 // socket.emit('createMessage', {
 //   from: "Nidhi",
 //   text: "Will you marry me?"
@@ -37,5 +47,21 @@ $('#message-form').on('submit', function(e) {
     text: $('[name=message]').val()
   }, function(ack) {
     console.log(ack + "got it");
+  });
+});
+
+var locationButton = $('#send-location'); // jQuery selector that targets the button
+locationButton.on('click', function() {
+  if (!navigator.geolocation) {
+    return alert("Geolocation is not supported by your browser");
+  }
+
+  navigator.geolocation.getCurrentPosition(function(position) {
+    socket.emit("createLocationMessage", {
+      latitude:position.coords.latitude,
+      longitude: position.coords.longitude,
+    });
+  }, function() {
+    alert("Unable to fetch location");
   });
 });
