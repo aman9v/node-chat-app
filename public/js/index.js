@@ -15,22 +15,38 @@ socket.on("disconnect", function() {
 // so a user can see the email as soon as it comes in.
 socket.on('newMessage', function(message) { // this event will fire off every time there is a new email.
   console.log(`From: ${message.from} Saying: ${message.text}  At: ${message.createdAt}`); // data that is sent along with the event is passed as argument to the callback
-  var formattedTime = moment(message.createAt).format("h:mm A");
-  var li = $("<li></li>");
-  li.text(`${message.from} ${formattedTime}: ${message.text}`);
-  $('#messages').append(li);
+var formattedTime = moment(message.createAt).format("h:mm A");
+  var template = $('#message-template').html(); //returns the markup inside the message template which is the <p> tag
+  var rendered = Mustache.render(template, {
+    text: message.text,
+    from: message.from,
+    createdAt: formattedTime
+  });
+
+  $('#messages').append(rendered);
+
+  // var li = $("<li></li>");
+  // li.text(`${message.from} ${formattedTime}: ${message.text}`);
+  // $('#messages').append(li);
 }); // this event has been emitted by the server in the server.js file
 // so, we are able to send not only an event but also some data that wasn't possible with a simple http API
 
 socket.on('newLocationMessage', function(message) {
-  var li = $('<li></li>');
-  var a = $('<a target="_blank">My current location</a>');
+  // var li = $('<li></li>');
+  // var a = $('<a target="_blank">My current location</a>');
   var formattedTime = moment(message.createdAt).format("h:mm A");
+  var template = $("#location-message-template").html();
+  var rendered = Mustache.render(template, {
+    from: message.from,
+    createdAt: formattedTime,
+    url: message.url
+  });
 
-  li.text(`${message.from} ${formattedTime}:`);
-  a.attr("href", message.url); // get and set attribute values from jQuery selected elements
-  li.append(a);
-  $('#messages').append(li);
+  $("#messages").append(rendered);
+  // li.text(`${message.from} ${formattedTime}:`);
+  // a.attr("href", message.url); // get and set attribute values from jQuery selected elements
+  // li.append(a);
+  // $('#messages').append(li);
 });
 
 // socket.emit('createMessage', {
