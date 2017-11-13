@@ -3,6 +3,23 @@
 
 
 var socket = io(); // we are making a request to the server. this is important for all communications from c to s
+
+var scrollToBottom = function() { // called each time a message is added to the chat area
+  // selectors
+  var messages = $("#messages");
+  var newMessage = messages.children("li:last-child");
+  // heights
+  var clientHeight = messages.prop('clientHeight'); // prop is a cross platform method used to fetch a property
+  var scrollTop = messages.prop("scrollTop");
+  var scrollHeight = messages.prop("scrollHeight");
+  var newMessageHeight = newMessage.innerHeight(); // gets the height of the message in pixels
+  var lastMessageHeight = newMessage.prev().innerHeight(); // second last list item
+
+  if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    messages.scrollTop(scrollHeight); // jQuery method to set the scrollTop value 
+  }
+};
+
 socket.on("connect", function() { // this is client side javascript code that runs on the browser.
   console.log('Connected to the server');
 });
@@ -24,6 +41,7 @@ var formattedTime = moment(message.createAt).format("h:mm A");
   });
 
   $('#messages').append(rendered);
+  scrollToBottom();
 
   // var li = $("<li></li>");
   // li.text(`${message.from} ${formattedTime}: ${message.text}`);
@@ -43,6 +61,7 @@ socket.on('newLocationMessage', function(message) {
   });
 
   $("#messages").append(rendered);
+  scrollToBottom();
   // li.text(`${message.from} ${formattedTime}:`);
   // a.attr("href", message.url); // get and set attribute values from jQuery selected elements
   // li.append(a);
