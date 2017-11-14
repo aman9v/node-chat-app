@@ -42,11 +42,10 @@ io.on("connect", (socket) => { // connect or connection
     users.removeUser(socket.id); // to ensure that there already is no user with this socket.id
     users.addUser(socket.id, params.name, params.room);
     io.to(params.room).emit("updateUserList", users.getUserList(params.room));
-    socket.emit("newMessage", generateMessage('Admin', "Welcome to the chat app"));
+    socket.emit("newMessage", generateMessage('Aman', "Welcome to my chat app. Just type in a message to get started..."));
     socket.broadcast.to(params.room).emit('newMessage', generateMessage("Admin", `${params.name} joined`));
     callback();
   });
-
 
   socket.on("createMessage", (message, callback) => {
     console.log(message);
@@ -71,9 +70,6 @@ io.on("connect", (socket) => { // connect or connection
    }
  });
 });
-
-
-
 
 app.use(express.static(publicPath));
 
