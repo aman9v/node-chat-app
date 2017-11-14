@@ -3,7 +3,6 @@
 
 
 var socket = io(); // we are making a request to the server. this is important for all communications from c to s
-
 var scrollToBottom = function() { // called each time a message is added to the chat area
   // selectors
   var messages = $("#messages");
@@ -48,7 +47,7 @@ socket.on("updateUserList", function(users) { // users is just an array of names
 // can then be rendered to the browser using jquery or react or any other front end framework
 // so a user can see the email as soon as it comes in.
 socket.on('newMessage', function(message) { // this event will fire off every time there is a new email.
-  console.log(`From: ${message.from} Saying: ${message.text}  At: ${message.createdAt}`); // data that is sent along with the event is passed as argument to the callback
+console.log(`From: ${message.from} Saying: ${message.text}  At: ${message.createdAt}`); // data that is sent along with the event is passed as argument to the callback
 var formattedTime = moment(message.createAt).format("h:mm A");
   var template = $('#message-template').html(); //returns the markup inside the message template which is the <p> tag
   var rendered = Mustache.render(template, {
@@ -99,7 +98,6 @@ $('#message-form').on('submit', function(e) {
   e.preventDefault();
   var messageTextBox = $('[name=message]');
   socket.emit('createMessage', {
-    from: "User",
     text: messageTextBox.val()
   }, function() {
     messageTextBox.val(""); // passing an empty string clears the text box

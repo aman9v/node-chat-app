@@ -50,7 +50,10 @@ io.on("connect", (socket) => { // connect or connection
 
   socket.on("createMessage", (message, callback) => {
     console.log(message);
-    io.emit("newMessage", generateMessage(message.from, message.text));
+    var user = users.getUser(socket.id);
+    if (user && isRealString(message.text)) {
+        io.to(user.room).emit("newMessage", generateMessage(user.name, message.text));
+    }
     callback(); // we could pass some arguments to the callback so that they are available inside of the callback sent on the client side.
     // socket.broadcast.emit("newMessage", { // the message gets broadcasted to every socket except for this one.
     //   from: message.from,
@@ -62,7 +65,10 @@ io.on("connect", (socket) => { // connect or connection
  // emits or creates an event. since it is an event handler so wo don't specify any callback.
 
  socket.on("createLocationMessage", (coordinates) => {
-   io.emit("newLocationMessage", generateLocationMessage("Admin", coordinates.latitude, coordinates.longitude));
+   var user = users.getUser(socket.id);
+   if (user) {
+     io.to(user.room).emit("newLocationMessage", generateLocationMessage(user.name, coordinates.latitude, coordinates.longitude));
+   }
  });
 });
 
