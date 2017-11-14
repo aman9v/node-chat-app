@@ -84,16 +84,6 @@ socket.on('newLocationMessage', function(message) {
   // $('#messages').append(li);
 });
 
-// socket.emit('createMessage', {
-//   from: "Nidhi",
-//   text: "Will you marry me?"
-// }, function(ack) {
-//   console.log(ack + "got it");
-// });
-// we are sending a callback that will be executed on the client when the event has been listened to on the server side.
-// Also, we have an option of sending some data back to the client. This can be facilitated by adding arguments to the sent callback which will
-// be sent or populated by the server and can be used inside of the callback on the client side.
-
 $('#message-form').on('submit', function(e) {
   e.preventDefault();
   var messageTextBox = $('[name=message]');

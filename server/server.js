@@ -53,12 +53,7 @@ io.on("connect", (socket) => { // connect or connection
     if (user && isRealString(message.text)) {
         io.to(user.room).emit("newMessage", generateMessage(user.name, message.text));
     }
-    callback(); // we could pass some arguments to the callback so that they are available inside of the callback sent on the client side.
-    // socket.broadcast.emit("newMessage", { // the message gets broadcasted to every socket except for this one.
-    //   from: message.from,
-    //   text: message.text,
-    //   createdAt: new Date().getTime()
-    // });
+    callback();
   });
 
  // emits or creates an event. since it is an event handler so wo don't specify any callback.
@@ -76,13 +71,3 @@ app.use(express.static(publicPath));
 server.listen(port, () => {
   console.log(`Server running on PORT ${port}`);
 });
-// behind the scenes epxress uses a node module http to create this server
-// Express on app.listen automatically calls the createServer method with the app
-// web sockets are persistent in the sense that both client and the server keep the connection open
-// io.on is a special event and is used for server wide events like when a connection is established with the server.
-
-// Also, we have an option of sending some data back to the client. This can be facilitated by adding arguments to the sent callback which will
-// be sent or populated by the server and can be used inside of the callback on the client side.
-// To achieve acknowledgements, client sends a callback to the server saying send me an acknowledgement with some data (if any).
-// The server in turn sends the ackknowledgement by invoking that callback this completes initiates the acknowledgement and
-// could also be passed some data.

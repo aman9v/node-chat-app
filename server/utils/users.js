@@ -1,25 +1,5 @@
 /* jshint esversion:6 */
 
-// array of objects with socketid, name, room name
-// addUser(id, name, room)
-// removeUser(socket_id)
-// getUser(socket_id) -> array of user objects
-//getUserList(room)
-
-// ES6 classes
-
-// class Person {
-//     constructor(name, age) {
-//       this.name = name;
-//       this.age = age;
-//     }
-//     getUserDesc() {
-//       return "A person"
-//     }
-// }
-//
-// var p = new Person("Aman", 25);
-// console.log("this.name", p.name);
 
 class User {
   constructor() {
