@@ -16,16 +16,33 @@ var scrollToBottom = function() { // called each time a message is added to the 
   var lastMessageHeight = newMessage.prev().innerHeight(); // second last list item
 
   if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
-    messages.scrollTop(scrollHeight); // jQuery method to set the scrollTop value 
+    messages.scrollTop(scrollHeight); // jQuery method to set the scrollTop value
   }
 };
 
 socket.on("connect", function() { // this is client side javascript code that runs on the browser.
-  console.log('Connected to the server');
+  var params = $.deparam(window.location.search);
+
+  socket.emit('join', params, function(err) {
+    if (err) {
+      alert(err);
+      window.location.href = "/";
+    } else {
+      console.log("No error");
+    }
+  });
 });
 
 socket.on("disconnect", function() {
   console.log("Disconnected from the server");
+});
+
+socket.on("updateUserList", function(users) { // users is just an array of names of users
+  var ul = $("<ul></ul>");
+  users.forEach(function(user) {
+    ul.append($("<li></li>").text(user));
+  });
+  $("#users").html(ul);
 });
 // creates an event handler that listens to a new email event from the server that
 // can then be rendered to the browser using jquery or react or any other front end framework
@@ -42,11 +59,11 @@ var formattedTime = moment(message.createAt).format("h:mm A");
 
   $('#messages').append(rendered);
   scrollToBottom();
-
+});
   // var li = $("<li></li>");
   // li.text(`${message.from} ${formattedTime}: ${message.text}`);
   // $('#messages').append(li);
-}); // this event has been emitted by the server in the server.js file
+ // this event has been emitted by the server in the server.js file
 // so, we are able to send not only an event but also some data that wasn't possible with a simple http API
 
 socket.on('newLocationMessage', function(message) {
